@@ -1,0 +1,7 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f3f4f6"/>
+  <path d="M80,60 L120,60 L120,160 L80,160 Z" fill="#059669" stroke="#047857" stroke-width="2"/>
+  <path d="M60,80 L80,80 L80,120 L60,120 Z" fill="#059669" stroke="#047857" stroke-width="2"/>
+  <path d="M120,80 L140,80 L140,120 L120,120 Z" fill="#059669" stroke="#047857" stroke-width="2"/>
+  <text x="100" y="140" text-anchor="middle" font-family="Arial" font-size="16" fill="white">Jacket</text>
+</svg>

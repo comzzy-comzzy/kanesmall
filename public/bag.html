@@ -30,3 +30,26 @@
     <script src="js/bag-page.js"></script>
 </body>
 </html>
+
+<!-- Bag Drawer/Modal -->
+<div id="bag-drawer" class="bag-drawer">
+    <div class="bag-drawer-overlay"></div>
+    <div class="bag-drawer-content">
+        <div class="bag-drawer-header">
+            <h3>Your Shopping Bag</h3>
+            <button class="bag-drawer-close" onclick="shoppingBag.closeDrawer()">×</button>
+        </div>
+        <div class="bag-drawer-body" id="bag-drawer-body">
+            <!-- Bag contents will be populated here -->
+        </div>
+        <div class="bag-drawer-footer">
+            <div class="bag-drawer-subtotal">
+                <strong>Subtotal: $<span id="bag-drawer-subtotal">0.00</span></strong>
+            </div>
+            <div class="bag-drawer-actions">
+                <a href="/bag.html" class="view-bag-btn">View Full Bag</a>
+                <button class="continue-shopping-btn" onclick="shoppingBag.closeDrawer()">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
+</div>

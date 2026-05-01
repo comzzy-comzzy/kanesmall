@@ -2,7 +2,9 @@
 class ShoppingBag {
     constructor() {
         this.bag = this.loadBag();
+        this.isDrawerOpen = false;
         this.updateBagIndicator();
+        this.initDrawer();
     }
 
     // Load bag from localStorage
@@ -21,6 +23,7 @@ class ShoppingBag {
         try {
             localStorage.setItem('shoppingBag', JSON.stringify(this.bag));
             this.updateBagIndicator();
+            this.updateDrawer();
         } catch (error) {
             console.error('Error saving bag to localStorage:', error);
         }
@@ -98,6 +101,109 @@ class ShoppingBag {
         }
     }
 
+    // Bag Drawer Functionality
+    initDrawer() {
+        // Add click handler to bag indicator
+        const bagIndicator = document.getElementById('bag-indicator');
+        if (bagIndicator) {
+            bagIndicator.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleDrawer();
+            });
+        }
+
+        // Close drawer when clicking overlay
+        const overlay = document.querySelector('.bag-drawer-overlay');
+        if (overlay) {
+            overlay.addEventListener('click', () => {
+                this.closeDrawer();
+            });
+        }
+
+        // Close drawer with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isDrawerOpen) {
+                this.closeDrawer();
+            }
+        });
+
+        // Initial drawer update
+        this.updateDrawer();
+    }
+
+    toggleDrawer() {
+        if (this.isDrawerOpen) {
+            this.closeDrawer();
+        } else {
+            this.openDrawer();
+        }
+    }
+
+    openDrawer() {
+        const drawer = document.getElementById('bag-drawer');
+        if (drawer) {
+            drawer.classList.add('open');
+            this.isDrawerOpen = true;
+            // Prevent body scroll when drawer is open
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    closeDrawer() {
+        const drawer = document.getElementById('bag-drawer');
+        if (drawer) {
+            drawer.classList.remove('open');
+            this.isDrawerOpen = false;
+            // Restore body scroll
+            document.body.style.overflow = '';
+        }
+    }
+
+    updateDrawer() {
+        const drawerBody = document.getElementById('bag-drawer-body');
+        const subtotalElement = document.getElementById('bag-drawer-subtotal');
+        
+        if (!drawerBody || !subtotalElement) return;
+
+        const bagItems = this.getItems();
+        const subtotal = this.getSubtotal();
+
+        if (bagItems.length === 0) {
+            drawerBody.innerHTML = `
+                <div class="empty-bag-drawer">
+                    <p>Your bag is empty</p>
+                    <p>Start shopping to add some items!</p>
+                </div>
+            `;
+        } else {
+            drawerBody.innerHTML = bagItems.map(item => `
+                <div class="bag-drawer-item">
+                    <div class="bag-drawer-item-image">
+                        ${item.imageUrl ? 
+                            `<img src="${item.imageUrl}" alt="${item.name}">` :
+                            '<span>🛍️</span>'
+                        }
+                    </div>
+                    <div class="bag-drawer-item-details">
+                        <h4 class="bag-drawer-item-name">${this.escapeHtml(item.name)}</h4>
+                        <div class="bag-drawer-item-price">$${item.price.toFixed(2)} each</div>
+                        <div class="bag-drawer-item-quantity">
+                            <button onclick="shoppingBag.updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                            <span>Qty: ${item.quantity}</span>
+                            <button onclick="shoppingBag.updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                        </div>
+                        <div class="bag-drawer-item-total">Total: $${(item.price * item.quantity).toFixed(2)}</div>
+                    </div>
+                    <button class="bag-drawer-item-remove" onclick="shoppingBag.removeProduct(${item.id})">
+                        ×
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        subtotalElement.textContent = subtotal.toFixed(2);
+    }
+
     // Show add confirmation (non-intrusive notification)
     showAddConfirmation(productName) {
         // Create a simple toast notification
@@ -132,6 +238,12 @@ class ShoppingBag {
                 }
             }, 300);
         }, 3000);
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 }
 

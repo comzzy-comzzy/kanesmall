@@ -1,0 +1,6 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f3f4f6"/>
+  <path d="M70,60 L90,60 L90,160 L70,160 Z" fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
+  <path d="M110,60 L130,60 L130,160 L110,160 Z" fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="100" y="120" text-anchor="middle" font-family="Arial" font-size="16" fill="white">Jeans</text>
+</svg>

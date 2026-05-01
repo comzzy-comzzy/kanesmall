@@ -17,28 +17,28 @@ const products = [
     name: "Classic White T-Shirt",
     description: "A comfortable and versatile cotton t-shirt for everyday wear.",
     price: 19.99,
-    imageUrl: "/images/tshirt.jpg"
+    imageUrl: "/images/tshirt.svg"
   },
   {
     id: 2,
     name: "Denim Jeans",
     description: "Stylish and durable denim jeans with a perfect fit.",
     price: 49.99,
-    imageUrl: "/images/jeans.jpg"
+    imageUrl: "/images/jeans.svg"
   },
   {
     id: 3,
     name: "Running Shoes",
     description: "Lightweight running shoes with excellent cushioning.",
     price: 89.99,
-    imageUrl: "/images/shoes.jpg"
+    imageUrl: "/images/shoes.svg"
   },
   {
     id: 4,
     name: "Winter Jacket",
     description: "Warm and waterproof jacket for cold weather.",
     price: 129.99,
-    imageUrl: "/images/jacket.jpg"
+    imageUrl: "/images/jacket.svg"
   }
 ];
 
