@@ -5,6 +5,27 @@ class ShoppingBag {
         this.isDrawerOpen = false;
         this.updateBagIndicator();
         this.initDrawer();
+        this.listeners = [];
+    }
+
+    // Event system for cross-component updates
+    on(event, callback) {
+        if (!this.listeners[event]) {
+            this.listeners[event] = [];
+        }
+        this.listeners[event].push(callback);
+    }
+
+    emit(event, data) {
+        if (this.listeners[event]) {
+            this.listeners[event].forEach(callback => {
+                try {
+                    callback(data);
+                } catch (error) {
+                    console.error('Error in bag event listener:', error);
+                }
+            });
+        }
     }
 
     // Load bag from localStorage
@@ -18,12 +39,18 @@ class ShoppingBag {
         }
     }
 
-    // Save bag to localStorage
+    // Save bag to localStorage and notify all listeners
     saveBag() {
         try {
             localStorage.setItem('shoppingBag', JSON.stringify(this.bag));
             this.updateBagIndicator();
             this.updateDrawer();
+            // Emit change event for all listeners
+            this.emit('bagChanged', {
+                items: this.getItems(),
+                totalItems: this.getTotalItems(),
+                subtotal: this.getSubtotal()
+            });
         } catch (error) {
             console.error('Error saving bag to localStorage:', error);
         }
@@ -46,24 +73,48 @@ class ShoppingBag {
         }
         this.saveBag();
         this.showAddConfirmation(productData.name);
+        
+        // Emit specific add event
+        this.emit('itemAdded', {
+            productId: productId,
+            product: this.bag[productId],
+            totalItems: this.getTotalItems()
+        });
     }
 
     // Remove product from bag
     removeProduct(productId) {
         if (this.bag[productId]) {
+            const removedItem = this.bag[productId];
             delete this.bag[productId];
             this.saveBag();
+            
+            // Emit specific remove event
+            this.emit('itemRemoved', {
+                productId: productId,
+                removedItem: removedItem,
+                totalItems: this.getTotalItems()
+            });
         }
     }
 
     // Update product quantity
     updateQuantity(productId, quantity) {
         if (this.bag[productId]) {
+            const oldQuantity = this.bag[productId].quantity;
             if (quantity <= 0) {
                 this.removeProduct(productId);
             } else {
                 this.bag[productId].quantity = quantity;
                 this.saveBag();
+                
+                // Emit specific quantity change event
+                this.emit('quantityChanged', {
+                    productId: productId,
+                    oldQuantity: oldQuantity,
+                    newQuantity: quantity,
+                    product: this.bag[productId]
+                });
             }
         }
     }
@@ -87,8 +138,15 @@ class ShoppingBag {
 
     // Clear entire bag
     clearBag() {
+        const clearedItems = this.getItems();
         this.bag = {};
         this.saveBag();
+        
+        // Emit clear event
+        this.emit('bagCleared', {
+            clearedItems: clearedItems,
+            totalItems: 0
+        });
     }
 
     // Update bag indicator in header

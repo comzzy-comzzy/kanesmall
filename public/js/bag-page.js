@@ -8,19 +8,34 @@ class BagPage {
 
     init() {
         this.renderBag();
-        // Listen for bag changes to update the page
-        window.addEventListener('storage', () => {
+        
+        // Listen for bag changes via the event system
+        window.shoppingBag.on('bagChanged', (data) => {
             this.renderBag();
         });
         
-        // Also update when bag changes via our own instance
-        const originalSaveBag = window.shoppingBag.saveBag;
-        window.shoppingBag.saveBag = function() {
-            originalSaveBag.call(this);
-            if (window.bagPage) {
-                window.bagPage.renderBag();
+        window.shoppingBag.on('itemAdded', (data) => {
+            this.highlightUpdatedItem(data.productId);
+        });
+        
+        window.shoppingBag.on('itemRemoved', (data) => {
+            this.renderBag();
+        });
+        
+        window.shoppingBag.on('quantityChanged', (data) => {
+            this.highlightUpdatedItem(data.productId);
+        });
+        
+        window.shoppingBag.on('bagCleared', (data) => {
+            this.renderBag();
+        });
+        
+        // Also listen for localStorage changes from other tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'shoppingBag') {
+                this.renderBag();
             }
-        };
+        });
     }
 
     renderBag() {
@@ -57,7 +72,7 @@ class BagPage {
         const bagHTML = `
             <div class="bag-items">
                 ${bagItems.map(item => `
-                    <div class="bag-item" data-product-id="${item.id}">
+                    <div class="bag-item" data-product-id="${item.id}" id="bag-item-${item.id}">
                         <div class="bag-item-image">
                             ${item.imageUrl ? 
                                 `<img src="${item.imageUrl}" alt="${item.name}" loading="lazy">` :
@@ -95,9 +110,24 @@ class BagPage {
         this.container.innerHTML = bagHTML;
     }
 
+    highlightUpdatedItem(productId) {
+        const itemElement = document.getElementById(`bag-item-${productId}`);
+        if (itemElement) {
+            // Add animation class
+            itemElement.classList.add('updated');
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                itemElement.classList.remove('updated');
+            }, 500);
+        }
+        
+        // Re-render to ensure all quantities are up to date
+        this.renderBag();
+    }
+
     updateQuantity(productId, newQuantity) {
         window.shoppingBag.updateQuantity(productId, newQuantity);
-        // Re-render will happen automatically due to saveBag hook
     }
 
     removeItem(productId) {

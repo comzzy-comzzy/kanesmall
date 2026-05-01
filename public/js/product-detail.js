@@ -16,6 +16,12 @@ class ProductDetail {
         try {
             await this.loadProduct();
             this.renderProduct();
+            
+            // Listen for bag changes to update product states if needed
+            window.shoppingBag.on('bagChanged', (data) => {
+                // If we implement product-specific bag states in the future
+                // this.updateProductState(data.items);
+            });
         } catch (error) {
             this.showError('Failed to load product details. Please try again later.');
             console.error('Error loading product:', error);
