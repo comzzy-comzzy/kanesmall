@@ -19,37 +19,68 @@
 
     <main class="main">
         <div class="container">
-            <h2 class="page-title">Your Shopping Bag</h2>
+            <div class="bag-page-header">
+                <h2 class="page-title">Your Shopping Bag</h2>
+                <div class="bag-summary-header">
+                    <span class="item-count" id="bag-item-count">0 items</span>
+                    <button class="clear-bag-btn" onclick="bagPage.clearBag()">Clear Bag</button>
+                </div>
+            </div>
+            
             <div id="bag-container">
                 <div class="loading">Loading bag contents...</div>
             </div>
+            
+            <div class="bag-page-footer" id="bag-page-footer" style="display: none;">
+                <div class="bag-total-summary">
+                    <div class="subtotal-line">
+                        <span>Subtotal:</span>
+                        <span>$<span id="bag-subtotal">0.00</span></span>
+                    </div>
+                    <div class="shipping-line">
+                        <span>Shipping:</span>
+                        <span>Calculated at checkout</span>
+                    </div>
+                    <div class="total-line">
+                        <span><strong>Estimated Total:</strong></span>
+                        <span><strong>$<span id="bag-total">0.00</span></strong></span>
+                    </div>
+                </div>
+                
+                <div class="bag-actions">
+                    <a href="/" class="continue-shopping-link">← Continue Shopping</a>
+                    <button class="checkout-btn" onclick="bagPage.proceedToCheckout()">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
+
+    <!-- Bag Drawer/Modal -->
+    <div id="bag-drawer" class="bag-drawer">
+        <div class="bag-drawer-overlay"></div>
+        <div class="bag-drawer-content">
+            <div class="bag-drawer-header">
+                <h3>Your Shopping Bag</h3>
+                <button class="bag-drawer-close" onclick="shoppingBag.closeDrawer()">×</button>
+            </div>
+            <div class="bag-drawer-body" id="bag-drawer-body">
+                <!-- Bag contents will be populated here -->
+            </div>
+            <div class="bag-drawer-footer">
+                <div class="bag-drawer-subtotal">
+                    <strong>Subtotal: $<span id="bag-drawer-subtotal">0.00</span></strong>
+                </div>
+                <div class="bag-drawer-actions">
+                    <a href="/bag.html" class="view-bag-btn">View Full Bag</a>
+                    <button class="continue-shopping-btn" onclick="shoppingBag.closeDrawer()">Continue Shopping</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="js/bag.js"></script>
     <script src="js/bag-page.js"></script>
 </body>
 </html>
-
-<!-- Bag Drawer/Modal -->
-<div id="bag-drawer" class="bag-drawer">
-    <div class="bag-drawer-overlay"></div>
-    <div class="bag-drawer-content">
-        <div class="bag-drawer-header">
-            <h3>Your Shopping Bag</h3>
-            <button class="bag-drawer-close" onclick="shoppingBag.closeDrawer()">×</button>
-        </div>
-        <div class="bag-drawer-body" id="bag-drawer-body">
-            <!-- Bag contents will be populated here -->
-        </div>
-        <div class="bag-drawer-footer">
-            <div class="bag-drawer-subtotal">
-                <strong>Subtotal: $<span id="bag-drawer-subtotal">0.00</span></strong>
-            </div>
-            <div class="bag-drawer-actions">
-                <a href="/bag.html" class="view-bag-btn">View Full Bag</a>
-                <button class="continue-shopping-btn" onclick="shoppingBag.closeDrawer()">Continue Shopping</button>
-            </div>
-        </div>
-    </div>
-</div>
